@@ -1,0 +1,34 @@
+{
+  "name": "_site",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "./build.sh"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@11ty/eleventy": "^0.10.0",
+    "concat": "^1.0.3",
+    "expose-loader": "^0.7.5",
+    "uglifycss": "0.0.29",
+    "webpack": "^4.41.5",
+    "webpack-cli": "^3.3.10"
+  },
+  "dependencies": {
+    "@node-minify/core": "^5.3.0",
+    "@node-minify/google-closure-compiler": "^5.3.0",
+    "@node-minify/html-minifier": "^5.3.0",
+    "aws-sdk": "^2.605.0",
+    "clean-css": "^4.2.1",
+    "jquery": "^3.4.1",
+    "node-minify": "^3.6.0",
+    "owl.carousel": "^2.3.4",
+    "popper.js": "^1.16.0",
+    "randomstring": "^1.1.5",
+    "request": "^2.88.0",
+    "superagent": "^5.2.1"
+  }
+}

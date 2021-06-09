@@ -1,0 +1,50 @@
+---
+layout: layout.njk
+internalName: index
+pageName: index
+headerType: solid
+---
+{% set indexJS %}
+	{% include 'index.js' %}
+{% endset %}
+<!-- Page Header-->
+        <header class="masthead" style="background-image: url('{{env.CDN_URL}}images/home-bg.jpg')">
+            <div class="container position-relative px-4 px-lg-5">
+                <div class="row gx-4 gx-lg-5 justify-content-center">
+                    <div class="col-md-10 col-lg-8 col-xl-7">
+                        <div class="site-heading">
+                            <h1>cryptoskillz</h1>
+                            <span class="subheading">A journey through Bitcoin technology</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- Main Content-->
+
+        <div class="container px-4 px-lg-5">
+            <div class="row gx-4 gx-lg-5 justify-content-center">
+                <div class="col-md-10 col-lg-8 col-xl-7">
+                    <!-- Post preview-->
+                    
+                    <div class="post-preview">
+                        <a href="https://cryptoskillz.com/old/blog/ecs/" target="_blank">
+                            <h2 class="post-title">This is a new site (View the old one by clicking the link)</h2>
+                            <h3 class="post-subtitle">It most likley does not work as excepted at this moment</h3>
+                        </a>
+                        <!--
+                        <p class="post-meta">
+                            Posted by
+                            <a href="#!">Start Bootstrap</a>
+                            on September 24, 2021
+                        </p>
+                        -->
+                    </div>
+                    <!-- Divider -->
+                    <hr class="my-4" />
+                    <!-- Pager-->
+                    <!--<div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="#!">Older Posts →</a></div>-->
+                </div>
+            </div>
+        </div>
+<script type="text/javascript">{{indexJS  | jsmin | safe}}</script>
