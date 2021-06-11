@@ -9,7 +9,7 @@ var _PHONE_NUMBER = "(XXX) XXXX XXXXX"
 switch (process.env.ELEVENTY_ENV) {
     case 'local':
         _CDN_URL = '/assets/';
-        _API_URL = 'http://127.0.0.1:8080/';
+        _API_URL = 'http://localhost:1337/';
         _ROOT_URL = 'http://127.0.0.1:8080/';
         break;
     case 'prod':
@@ -19,7 +19,7 @@ switch (process.env.ELEVENTY_ENV) {
         break;
     default:
         _CDN_URL = '/assets/';
-        _API_URL = 'https://apistage.clasiq.com/';
+        _API_URL = 'http://localhost:1337/';
         _ROOT_URL = "https://www.cryptoskillz.com/"
         break;
 }

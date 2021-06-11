@@ -30,24 +30,15 @@ wipeOutOldBuild () {
 #    cp ./src/_includes/*.njk output/templates/_includes
 #}
 
-exitOnError () {
-if [[ $? -ne 0 ]]
-then
-echo -ne 'A command exited with error status of: '; echo -ne $?; echo 'Exiting.'
-exit 1
-fi
-}
-
-# Build logic:
-
-echo -e "[11tyStaticFramework] \033[1mSTARTING BUILD"; echo -e "\033[0m"
-
-wipeOutOldBuild
+copyImages () {
+    #mkdir -p output/templates/_includes
+    cp ../cms/public/uploads/* output/HTML/assets/images
+ }
 
 eleventy --input ./src --output output/HTML
 
-exitOnError
 
+copyImages
 #copyTemplates
 
 # Removing this for now

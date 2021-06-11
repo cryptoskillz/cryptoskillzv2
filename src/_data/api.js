@@ -7,38 +7,30 @@ let env = require('./env')
 //this function gets some date from and API which can be used in the data processing, for simpluicty stakes it is connection to our auctions endpoint so you can see
 //it in action 
 let getSomething = async () => {
-
+    var res = superagent.get(env.API_URL+ "blog-articles/").query({}).end(function(err, res) {
     try {
-        var res = await superagent.get(env.API_URL + 'v2/auctions/').query({
-            'limit': '10'
-        });
-        var resultsArray = res.body.results;
-        var hasNextPage = !!(res.body.next)
-        var nextPageURL = res.body.next;
-        while (hasNextPage) {
-            var nextPage = await superagent.get(nextPageURL);
-            hasNextPage = !!(nextPage.body.next)
-            nextPageURL = nextPage.body.next
-            resultsArray = resultsArray.concat(nextPage.body.results)
+            //check we got a response.
+            if (res.ok) {
+                console.log(res.body)
+                return res.body;
+            }
+           
+        } catch (err) {
+            console.log('Error getting something:')
+            console.error(err)
         }
-        //console.log('Built auctions array with ' + resultsArray.length + ' auctions');
-        //figure out live auctions
-        return resultsArray;
-    } catch (err) {
-        console.log('Error getting auctions:')
-        console.error(err)
-    }
 
+   })
 }
 
 
 module.exports = async () => {
-    /*
+    
     let functionResults = [];
     if (functionResults.length === 0) functionResults = await getSomething();
     
     return {
         functionResultsArray: functionResults
     }
-    */
+    
 }
