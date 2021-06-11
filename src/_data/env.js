@@ -37,7 +37,7 @@ module.exports = {
     API_URL: _API_URL,
     CDN_URL: _CDN_URL,
     ROOT_URL: _ROOT_URL,
-    EMAIL: "info@clasiq.com",
+    EMAIL: "cryptoskilz@protonmail.com",
     PHONE_NUMBER: _PHONE_NUMBER,
     ASSETBUMP: 1,
     CURRENTYEAR: currentYear
