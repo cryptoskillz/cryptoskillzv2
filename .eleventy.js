@@ -4,6 +4,13 @@ const api = require('./src/_data/api');
 
 
 module.exports = function (eleventyConfig) {
+
+  const MarkdownIt = require("markdown-it");
+  const mdRender = new MarkdownIt();
+  eleventyConfig.addFilter("renderUsingMarkdown", function(rawString) {
+    return mdRender.render(rawString);
+  });
+
   eleventyConfig.addPassthroughCopy({
     "src/assets/pdf": "assets/pdf"
   });
