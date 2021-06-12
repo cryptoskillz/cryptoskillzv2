@@ -32,13 +32,16 @@ wipeOutOldBuild () {
 
 copyImages () {
     #mkdir -p output/templates/_includes
-    cp ../cms/public/uploads/* output/HTML/assets/images
+    cp ../cms/public/uploads/* output/HTML/assets/images/uploads
  }
+
+ wipeOutOldBuild
 
 eleventy --input ./src --output output/HTML
 
-
 copyImages
+
+
 #copyTemplates
 
 # Removing this for now
@@ -49,6 +52,9 @@ then
 echo -e "[11tyStaticFramework] \033[92mLOCAL BUILD COMPLETE"; echo -e "\033[0m"
 exit
 fi
+
+
+
 
 #todo fix this for prod
 node minify.js
