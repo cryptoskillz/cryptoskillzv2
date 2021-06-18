@@ -6703,7 +6703,12 @@ textarea.form-control-lg {
 
 .mb-4 {
   margin-bottom: 1.5rem !important;
+
+
 }
+
+article.class-name img{max-width:100%;}
+
 
 .mb-5 {
   margin-bottom: 3rem !important;

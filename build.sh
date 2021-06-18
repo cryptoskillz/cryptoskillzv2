@@ -35,10 +35,8 @@ copyImages () {
     cp ../cms/public/uploads/* output/HTML/assets/images/uploads
  }
 
- wipeOutOldBuild
-
+wipeOutOldBuild
 eleventy --input ./src --output output/HTML
-
 copyImages
 
 
@@ -52,17 +50,9 @@ then
 echo -e "[11tyStaticFramework] \033[92mLOCAL BUILD COMPLETE"; echo -e "\033[0m"
 exit
 fi
-
-
-
-
 #todo fix this for prod
 node minify.js
-
 exitOnError
-
 uglifycss output/HTML/assets/css/*.css > output/HTML/assets/css/bundle.css
-
 exitOnError
-
 echo -e "[11tyStaticFramework] \033[92mBUILD COMPLETE"; echo -e "\033[0m"
