@@ -14,7 +14,7 @@ switch (process.env.ELEVENTY_ENV) {
         break;
     case 'prod':
         _CDN_URL = '/assets/';
-        _API_URL = 'http://127.0.0.1:8080/';
+        _API_URL = 'https://sleepy-everglades-71548.herokuapp.com/';
         _ROOT_URL = 'https://www.cryptoskillz.com/';
         break;
     default:

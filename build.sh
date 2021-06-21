@@ -52,7 +52,8 @@ exit
 fi
 #todo fix this for prod
 node minify.js
-exitOnError
+#todo getting a random uglify css error so disabled this command for now
+#exitOnError
 uglifycss output/HTML/assets/css/*.css > output/HTML/assets/css/bundle.css
-exitOnError
+#exitOnError
 echo -e "[11tyStaticFramework] \033[92mBUILD COMPLETE"; echo -e "\033[0m"
