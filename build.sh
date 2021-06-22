@@ -37,7 +37,7 @@ copyImages () {
 
 wipeOutOldBuild
 eleventy --input ./src --output output/HTML
-copyImages
+#copyImages
 
 
 #copyTemplates
