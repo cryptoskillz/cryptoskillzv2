@@ -8,6 +8,7 @@ let env = require('./env')
 //it in action 
 
 let getImages = async () => {
+    console.log('getting images')
     try {
         var res = await superagent.get(env.API_URL+ "/upload/files/").query({})
         //check we got a response.
@@ -15,27 +16,65 @@ let getImages = async () => {
             let images = res.body;
             for (var i = 0; i < images.length; i++) {
                 //console.log(images[i].url);
-                var http = require('http'),                                                
-                    Stream = require('stream').Transform,                                  
-                    fs = require('fs');                                                    
+                var http = require('http')     
+                var https = require('https');
+                var usehttpmethod = 0; // default to http                                          
+                Stream = require('stream').Transform                               
+                fs = require('fs');                                                    
+                let url;
+                let imagename;
 
-                var url = env.API_URL+images[i].url   
+
+                if(images[i].url.indexOf("https://res.cloudinary.com/dfesv3sqc/image/upload/") >= 0) 
+                {
+                    //console.log('found')
+                    usehttpmethod =1;
+                    url = images[i].url  
+                    imagenamearr = images[i].url.split("/");
+                    //console.log(imagenamearr[7])
+                    imagename = imagenamearr[7]
+                }
+                else
+                {
+                    //console.log('not found')
+                    usehttpmethod =0;
+                    url = env.API_URL+images[i].url
+                    imagename = images[i].url;
+                }
+                
                 //console.log(url)   
-                //console.log('output/HTML/assets/images'+images[i].url);           
-                let imagename = images[i].url;
+                //console.log(imagename)
+                if (usehttpmethod == 1)
+                {
 
-                http.request(url, function(response) {                                        
-                  var data = new Stream();                                                    
+                    https.request(url, function(response) {                                        
+                      var data = new Stream();                                                    
 
-                  response.on('data', function(chunk) {                                       
-                    data.push(chunk);                                                         
-                  });                                                                         
+                      response.on('data', function(chunk) {                                       
+                        data.push(chunk);                                                         
+                      });                                                                         
 
-                  response.on('end', function() {     
-                    console.log('hhh output/HTML/assets/images'+imagename )                                        
-                    fs.writeFileSync('output/HTML/assets/images'+imagename   , data.read());                               
-                  });                                                                         
-                }).end();
+                      response.on('end', function() {     
+                        //console.log('hhh output/HTML/assets/images/uploads/'+imagename )                                        
+                        fs.writeFileSync('output/HTML/assets/images/uploads/'+imagename   , data.read());                               
+                      });                                                                         
+                    }).end();
+                }
+                else
+                {
+                    http.request(url, function(response) {                                        
+                        var data = new Stream();                                                    
+
+                        response.on('data', function(chunk) {                                       
+                            data.push(chunk);                                                         
+                        });                                                                         
+
+                        response.on('end', function() {     
+                            //console.log('hhh output/HTML/assets/images'+imagename )                                        
+                            fs.writeFileSync('output/HTML/assets/images'+imagename   , data.read());                               
+                        });                                                                         
+                    }).end();
+                }
             }
         }
     } catch (err) {
