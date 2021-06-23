@@ -84,11 +84,41 @@ let getImages = async () => {
 }
 
 let getSomething = async () => {
+    console.log('getting articles')
     try {
         var res = await superagent.get(env.API_URL+ "/blog-articles/").query({})
+        //console.log(res.body)
         //check we got a response.
         if (res.ok) {
-            //console.log(res.body)
+            let articles = res.body;
+            
+            for (var i = 0; i < articles.length; i++) {
+                const regex = /upload\/(.*?)\)/gm;
+                const str = articles[i].content
+                let m;
+                //we can clean this regex up but it is good enough for now
+                while ((m = regex.exec(str)) !== null) {
+                    // This is necessary to avoid infinite loops with zero-width matches
+                    if (m.index === regex.lastIndex) {
+                        regex.lastIndex++;
+                    }
+    
+                    // The result can be accessed through the `m`-variable, we can clean th
+                    m.forEach((match, groupIndex) => {
+                        let tmp = "https://res.cloudinary.com/dfesv3sqc/image/upload/";
+                        if (groupIndex == 1)
+                        {
+                            let tmpnamearr = match.split("/");
+                            let tmpimagename = tmpnamearr[1]
+                            //console.log(tmpimagename)
+                            articles[i].content = articles[i].content.replace(tmp+match,env.ROOT_URL+"/assets/images/uploads/"+tmpimagename)
+                            //console.log(tmp2)
+                        }
+                        //console.log(`Found match, group ${groupIndex}: ${match}`);
+                    });
+
+                }
+            }
             return res.body;
         }
     } catch (err) {
