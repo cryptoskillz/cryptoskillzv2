@@ -35,9 +35,13 @@ menuName: content
         <article class="mb-4 image-fluid">
             <div class="container px-4 px-lg-5">
                 <div class="row gx-4 gx-lg-5 justify-content-center">
-                    <div class="col-md-10 col-lg-8 col-xl-7">
+                    <div class="col-md-10 col-lg-8 col-xl-12">
                         {{contentarray.content  | renderUsingMarkdown | safe}}
                     </div>
                 </div>
             </div>
         </article>
+        <link rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/default.min.css">
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/highlight.min.js"></script>
+<script>hljs.highlightAll();</script>

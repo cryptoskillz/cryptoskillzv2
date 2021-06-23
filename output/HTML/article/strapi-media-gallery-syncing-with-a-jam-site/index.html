@@ -1,0 +1,144 @@
+<!doctype html><html lang=en><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,shrink-to-fit=no"><meta name=description content=""><meta name=author content=""><title>cryptoskillz</title><link rel=icon type=image/x-icon href=/assets//favicon.ico><script src=https://use.fontawesome.com/releases/v5.15.3/js/all.js crossorigin=anonymous></script><link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel=stylesheet><link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel=stylesheet><link rel=stylesheet href="/assets/css/bundle.css?v=1"><nav class="navbar navbar-expand-lg navbar-light" id=mainNav><div class="container px-4 px-lg-5"><a class=navbar-brand href=/index.html>cryptoskillz</a><button class=navbar-toggler type=button data-bs-toggle=collapse data-bs-target=#navbarResponsive aria-controls=navbarResponsive aria-expanded=false aria-label="Toggle navigation">Menu<i class="fas fa-bars"></i></button><div class="collapse navbar-collapse" id=navbarResponsive><ul class="navbar-nav ms-auto py-4 py-lg-0"><li class=nav-item><a class="nav-link px-lg-3 py-3 py-lg-4" href=/index.html>Home</a></ul></div></div></nav><header class=masthead style=background-image:url(https://res.cloudinary.com/dfesv3sqc/image/upload/v1624419033/imm_e3bb0a23c2.jpg)><div class="container position-relative px-4 px-lg-5"><div class="row gx-4 gx-lg-5 justify-content-center"><div class="col-md-10 col-lg-8 col-xl-7"><div class=post-heading><h1>Strapi media gallery syncing with a JAM site</h1><h2 class=subheading></h2></div></div></div></div></header><article class="mb-4 image-fluid"><div class="container px-4 px-lg-5"><div class="row gx-4 gx-lg-5 justify-content-center"><div class="col-md-10 col-lg-8 col-xl-12"><p>The web has changed we no longer have the admin and website on the same server with the images sitting on a CDN. We don't even use servers anymore everything just lives in a serverless environment this leads to several granular issues one of which we had to solve recently at cryptoskilz HQ and thought we would share our solution with everyone.<p>We used to have a pretty standard setup:<ul><li>hosting on S3 of the static frontend websites<li>custom coded cms on an EC2 box<li>code in Github<li>deployment via Codeship<li>assets in a CloudFront CDN<li>DNS managed by Cloudflare.</ul><p>Firstly we replaced the backend with<a href=https://strapi.io/ >Strapi</a>and upgraded the frontend to a JAM stack using<a href=https://www.11ty.dev/ >eleventy</a>after this we moved the hosting to<a href=https://pages.cloudflare.com/ >Cloudflare pages</a>. This has simplified our setup a lot, no more AWS, no more Codeship just Github,<a href=https://heroku.com/ >Heroku</a>to host Strapi, and Cloudflare to host the static site.<p>This worked great until we published our first blog post and realized that the images we used in the post were kept in the uploads directory for Strapi which lead to a problem as eleventy did not have access to this uploads folder. To fix this issue we did it in a couple of ways<h1>Attemp 1</h1><p>Our first attempt was to modify our build script with the following code<pre><code>copyImages () {
+    #mkdir -p output/templates/_includes
+    cp ../cms/public/uploads/* output/HTML/assets/images/uploads
+ }
+</code></pre><p>This copies all the images from the Strapi uploads folder to the assets images folder. This is a solution that works great for the local deployment where the admin and frontend are both running locally but it does not work in production as the admin is on Heroku and the frontend is on Cloudflare pages so we required another solution.<h1>Attemp 2</h1><p>Copying the files using the API.<p>The first thing we have to do is expose the files via the Strapi API and you do this in the roles and permission settings as shown in the image below.<p><img src=https://cryptoskillz.com/assets/images/uploads/Screenshot_from_2021_06_23_10_21_29_91b170b09d.png alt="Screenshot from 2021-06-23 10.21.29.png"><p>next in eleventy, in the data directory we add files to deal with data globally this is what we are going to use to connect to the Strapi CMS. Create a file called API.js and add the following code. Of course, tweak this to your purpose.<pre><code>//API Data preprocessing can happen here 
+
+const superagent = require('superagent');
+let env = require('./env')
+
+
+let getImages = async () =&gt; {
+    console.log('getting images')
+    try {
+        var res = await superagent.get(env.API_URL+ &quot;/upload/files/&quot;).query({})
+        //check we got a response.
+        if (res.ok) {
+            let images = res.body;
+            for (var i = 0; i &lt; images.length; i++) {
+                //console.log(images[i].url);
+                var http = require('http')     
+                var https = require('https');
+                var usehttpmethod = 0; // default to http                                          
+                Stream = require('stream').Transform                               
+                fs = require('fs');                                                    
+                let url;
+                let imagename;
+
+
+                if(images[i].url.indexOf(&quot;https://cryptoskillz.com/assets/images/uploads/undefined) &gt;= 0) 
+                {
+                    //console.log('found')
+                    usehttpmethod =1;
+                    url = images[i].url  
+                    imagenamearr = images[i].url.split(&quot;/&quot;);
+                    //console.log(imagenamearr[7])
+                    imagename = imagenamearr[7]
+                }
+                else
+                {
+                    //console.log('not found')
+                    usehttpmethod =0;
+                    url = env.API_URL+images[i].url
+                    imagename = images[i].url;
+                }
+                
+                //console.log(url)   
+                //console.log(imagename)
+                if (usehttpmethod == 1)
+                {
+
+                    https.request(url, function(response) {                                        
+                      var data = new Stream();                                                    
+
+                      response.on('data', function(chunk) {                                       
+                        data.push(chunk);                                                         
+                      });                                                                         
+
+                      response.on('end', function() {     
+                        //console.log('hhh output/HTML/assets/images/uploads/'+imagename )                                        
+                        fs.writeFileSync('output/HTML/assets/images/uploads/'+imagename   , data.read());                               
+                      });                                                                         
+                    }).end();
+                }
+                else
+                {
+                    http.request(url, function(response) {                                        
+                        var data = new Stream();                                                    
+
+                        response.on('data', function(chunk) {                                       
+                            data.push(chunk);                                                         
+                        });                                                                         
+
+                        response.on('end', function() {     
+                            //console.log('hhh output/HTML/assets/images'+imagename )                                        
+                            fs.writeFileSync('output/HTML/assets/images'+imagename   , data.read());                               
+                        });                                                                         
+                    }).end();
+                }
+            }
+        }
+    } catch (err) {
+        console.log('Error getting something:')
+        console.error(err)
+    }
+}
+
+let getSomething = async () =&gt; {
+    console.log('getting articles')
+    try {
+        var res = await superagent.get(env.API_URL+ &quot;/blog-articles/&quot;).query({})
+        //console.log(res.body)
+        //check we got a response.
+        if (res.ok) {
+            let articles = res.body;
+            
+            for (var i = 0; i &lt; articles.length; i++) {
+                const regex = /upload\/(.*?)\)/gm;
+                const str = articles[i].content
+                let m;
+                //we can clean this regex up but it is good enough for now
+                while ((m = regex.exec(str)) !== null) {
+                    // This is necessary to avoid infinite loops with zero-width matches
+                    if (m.index === regex.lastIndex) {
+                        regex.lastIndex++;
+                    }
+    
+                    // The result can be accessed through the `m`-variable, we can clean th
+                    m.forEach((match, groupIndex) =&gt; {
+                        let tmp = &quot;https://res.cloudinary.com/dfesv3sqc/image/upload/&quot;;
+                        if (groupIndex == 1)
+                        {
+                            let tmpnamearr = match.split(&quot;/&quot;);
+                            let tmpimagename = tmpnamearr[1]
+                            //console.log(tmpimagename)
+                            articles[i].content = articles[i].content.replace(tmp+match,env.ROOT_URL+&quot;/assets/images/uploads/&quot;+tmpimagename)
+                            //console.log(tmp2)
+                        }
+                        //console.log(`Found match, group ${groupIndex}: ${match}`);
+                    });
+
+                }
+            }
+            return res.body;
+        }
+    } catch (err) {
+        console.log('Error getting something:')
+        console.error(err)
+    }
+}
+
+
+module.exports = async () =&gt; {
+    let functionResults = [];
+    if (functionResults.length === 0) functionResults = await getSomething();
+
+    getImages();
+
+    //console.log(functionResults)
+    return {
+        articlesArray: functionResults
+    }
+    
+}
+</code></pre><p>You can view the code<a href=https://github.com/cryptoskillz/cryptoskillzv2/blob/master/src/_data/api.js>here</a>and read more about how it works<a href=https://www.11ty.dev/docs/data-js/ >here</a><p>this gets a list of files from the API URLs and downloads the images to the assets directory of our eleventy app which we just pass through during the build phase.<p>Then we ran into one final issue as we used Heroku to host our CMS then we cannot use the uploads dir to store the images as it is not ephemeral in this case we used a 3rd party to store our images. We used<a href=https://cloudinary.com/ >Cloudinary</a>and you can set this up very easily using the first part of this<a href=https://strapi.io/blog/adding-cloudinary-support-to-your-strapi-application>tutorial</a>, we don't use next or graphQL so we ignored that part. However, this begs the question if the image is now on a 3rd party and the CMS links directly to it why bother with the remaining steps?<p>It is a good question and the reason is the speed we like to remove every bottleneck and seeing as our entire site lives in a CDN it makes little sense to access another to pull down the images so (for us anyway) we want all the files to be as close to one another as possible.<p>If you view any of the images in this blog post you will see they are being loaded from our assets/images/uploads but they live in Cloudinary and are managed with our Strapi CMS instance.<p><img src=https://cryptoskillz.com/assets/images/uploads/2de1994d25f287b4b8720cc3b66da53e_0691d80099.png alt=2de1994d25f287b4b8720cc3b66da53e.png><p>You can view the source could along with the eleventy files, build scripts, etc from our git repo<a href=https://github.com/cryptoskillz/cryptoskillzv2>here</a></div></div></div></article><link rel=stylesheet href=//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/styles/default.min.css><script src=//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.0.1/highlight.min.js></script><script>hljs.highlightAll()</script><footer class=border-top><div class="container px-4 px-lg-5"><div class="row gx-4 gx-lg-5 justify-content-center"><div class="col-md-10 col-lg-8 col-xl-7"><ul class="list-inline text-center"><li class=list-inline-item><a href=https://twitter.com/crypto_skillz target=_blank><span class="fa-stack fa-lg"><i class="fas fa-circle fa-stack-2x"></i><i class="fab fa-twitter fa-stack-1x fa-inverse"></i></span></a><li class=list-inline-item><a href=https://github.com/cryptoskillz/ target=_blank><span class="fa-stack fa-lg"><i class="fas fa-circle fa-stack-2x"></i><i class="fab fa-github fa-stack-1x fa-inverse"></i></span></a></ul><div class="small text-center text-muted fst-italic">cryptoskillz 2021</div></div></div></div></footer><script src="/assets/js/bundle.js?v=1"></script>

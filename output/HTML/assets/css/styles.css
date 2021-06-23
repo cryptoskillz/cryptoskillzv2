@@ -220,8 +220,30 @@ a:not([href]):not([class]), a:not([href]):not([class]):hover {
   text-decoration: none;
 }
 
+/* For all <code> */
+code {
+  font-family: MyFancyCustomFont, monospace;
+  font-size: inherit;
+  background: #ffeff0;
+  word-wrap: break-word;
+  box-decoration-break: clone;
+  padding: .1rem .3rem .2rem;
+  border-radius: .2rem;
+}
+
+/* Code in text */
+p > code,
+li > code,
+dd > code,
+td > code {
+  background: #ffeff0;
+  word-wrap: break-word;
+  box-decoration-break: clone;
+  padding: .1rem .3rem .2rem;
+  border-radius: .2rem;
+}
+
 pre,
-code,
 kbd,
 samp {
   font-family: var(--bs-font-monospace);
@@ -237,20 +259,7 @@ pre {
   overflow: auto;
   font-size: 0.875em;
 }
-pre code {
-  font-size: inherit;
-  color: inherit;
-  word-break: normal;
-}
 
-code {
-  font-size: 0.875em;
-  color: #d63384;
-  word-wrap: break-word;
-}
-a > code {
-  color: inherit;
-}
 
 kbd {
   padding: 0.2rem 0.4rem;
