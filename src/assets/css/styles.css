@@ -10563,6 +10563,8 @@ p {
   margin: 2rem 0;
 }
 p a {
+  padding-left: 5px;
+  padding-right: 5px;
   text-decoration: underline;
 }
 
