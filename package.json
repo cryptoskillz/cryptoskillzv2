@@ -35,6 +35,7 @@
   "dependencies": {
     "@sanity/block-content-to-markdown": "^0.0.5",
     "@sanity/client": "^2.21.10",
-    "dotenv": "^10.0.0"
+    "dotenv": "^10.0.0",
+    "terser": "^5.10.0"
   }
 }

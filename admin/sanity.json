@@ -1,11 +1,11 @@
 {
   "root": true,
+  "api": {
+    "projectId": "qbtiq999",
+    "dataset": "production"
+  },
   "project": {
     "name": "cjmtrading"
-  },
-  "api": {
-    "projectId": "jtl5mro5",
-    "dataset": "production"
   },
   "plugins": [
     "@sanity/base",

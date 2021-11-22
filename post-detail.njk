@@ -1,14 +1,13 @@
 ---
-layout: postlayout.njk
+layout: layout.njk
 internalName: post-detail
 pagination:
   data: api.postsArray
   size: 1
   alias: contentarray
-permalink: /posts/{{ contentarray.slug.current }}/
+permalink: /post/{{ contentarray.slug.current }}/
 pageType: contentdetail
 menuName: content
 ---
-note this is in the .eleventyignore file remove it once you have wire up the API
 {{contentarray.title}}
-{{contentarray.body | safe }}
+{{contentarray._body | safe }}

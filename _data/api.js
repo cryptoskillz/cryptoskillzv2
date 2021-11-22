@@ -1,9 +1,6 @@
 require('dotenv').config();
-console.log(process.env.SANITYPROJECTID)
-/*
-remove the comments when you have wired up the API
-
-
+//debug
+//console.log(process.env.SANITYPROJECTID)
 
 //mark down module
 const toMarkdown = require('@sanity/block-content-to-markdown')
@@ -11,10 +8,10 @@ const toMarkdown = require('@sanity/block-content-to-markdown')
 const sanityClient = require('@sanity/client')
 //configure sanity
 const client = sanityClient({
-  projectId: 'process.env.SANITYPROJECTID',
-  dataset: 'process.env.SANITYDATASET',
-  apiVersion: 'process.env.SANITYAPIVERSION', // use current UTC date - see "specifying API version"!
-  token: 'process.env.SANITYTOKEN', // or leave blank for unauthenticated usage
+  projectId: process.env.SANITYPROJECTID,
+  dataset: process.env.SANITYDATASET,
+  apiVersion: process.env.SANITYAPIVERSION, // use current UTC date - see "specifying API version"!
+  token: process.env.SANITYTOKEN, // or leave blank for unauthenticated usage
   useCdn: false, // `false` if you want to ensure fresh data
 })
 
@@ -44,14 +41,14 @@ module.exports = async () => {
   let posts = []
   //call the get posts fuction
   if (posts.length === 0) posts =  await getPosts();
+  posts[0]._body = toMarkdown(posts[0].body, {serializers})
   //debug
-  //console.log("posts")
-  //console.log(toMarkdown(posts.body, {serializers}))
-  //console.dir(posts)
+  console.log("posts")
+  console.log(toMarkdown(posts[0].body, {serializers}))
+  //console.dir(posts[0].body)
   
   return {
         postsArray: posts
   }
 
 }
-*/

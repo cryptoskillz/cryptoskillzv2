@@ -5,6 +5,7 @@ const pluginSyntaxHighlight = require("@11ty/eleventy-plugin-syntaxhighlight");
 const pluginNavigation = require("@11ty/eleventy-navigation");
 const markdownIt = require("markdown-it");
 const markdownItAnchor = require("markdown-it-anchor");
+const Terser = require("terser");
 
 module.exports = function(eleventyConfig) {
    eleventyConfig.addPassthroughCopy({
@@ -28,6 +29,17 @@ module.exports = function(eleventyConfig) {
   eleventyConfig.addPassthroughCopy({
     "robots.txt": "robots.txt"
   });
+
+  eleventyConfig.addFilter("jsmin", function (code) {
+    let minified = Terser.minify(code);
+    if (minified.error) {
+      console.log("Terser error: ", minified.error);
+      return code;
+    }
+    return minified.code;
+  });
+
+
   // Add plugins
   eleventyConfig.addPlugin(pluginRss);
   eleventyConfig.addPlugin(pluginSyntaxHighlight);
