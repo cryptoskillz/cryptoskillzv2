@@ -43,8 +43,8 @@ module.exports = async () => {
   if (posts.length === 0) posts =  await getPosts();
   posts[0]._body = toMarkdown(posts[0].body, {serializers})
   //debug
-  console.log("posts")
-  console.log(toMarkdown(posts[0].body, {serializers}))
+  //console.log("posts")
+  //console.log(posts)
   //console.dir(posts[0].body)
   
   return {
