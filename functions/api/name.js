@@ -4,6 +4,5 @@ addEventListener("fetch", event => {
 
 export async function handleRequest(request) {
   const value = await CZBLOG.list()
-
   return new Response(value.keys)
 }
