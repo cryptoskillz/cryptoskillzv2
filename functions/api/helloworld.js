@@ -1,3 +1,4 @@
+
 export async function onRequest(context) {
   // Contents of context object
   const {
