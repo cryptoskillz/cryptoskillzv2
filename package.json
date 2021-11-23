@@ -33,6 +33,7 @@
     "markdown-it-anchor": "^8.1.2"
   },
   "dependencies": {
+    "@sanity/block-content-to-html": "^2.0.0",
     "@sanity/block-content-to-markdown": "^0.0.5",
     "@sanity/client": "^2.21.10",
     "dotenv": "^10.0.0",
