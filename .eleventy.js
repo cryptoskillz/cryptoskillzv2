@@ -39,6 +39,16 @@ module.exports = function(eleventyConfig) {
     return minified.code;
   });
 
+const blocksToHtml = require('@sanity/block-content-to-html')
+
+eleventyConfig.addFilter('sanityToHTML', function(value) {
+  return blocksToHtml({
+    blocks: value,
+    imageOptions: {w: 600, h: 600, fit: 'max'},
+    projectId: process.env.SANITYPROJECTID,
+    dataset: process.env.SANITYDATASET,
+  })
+})
 
   // Add plugins
   eleventyConfig.addPlugin(pluginRss);

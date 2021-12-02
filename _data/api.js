@@ -2,19 +2,7 @@ require('dotenv').config();
 //debug
 //console.log(process.env.SANITYPROJECTID)
 
-//mark down module
-/*
-const toMarkdown = require('@sanity/block-content-to-markdown')
-//seralizers
-const serializers = {
-  types: {
-    code: props => '```' + props.node.language + '\n' + props.node.code + '\n```'
-  }
-}
-*/
 
-const blocksToHtml = require('@sanity/block-content-to-html')
-const h = blocksToHtml.h
 
 
 //sanitu client
@@ -30,23 +18,19 @@ const client = sanityClient({
 
 
 
-const serializers = {
-  types: {
-    code: props => (
-      h('pre', {className: props.node.language},
-        h('code', props.node.code),
-        h('image: props =&gt; &lt;img ... /&gt;')
-      )
-    )
-  }
-}
-
-
 //async function to get the posts
 getPosts = async () => {
   //build the query.  
   //note we want to ignore drafts. 
-  const query = '*[_type == "post" ][!(_id in path("drafts.**"))]'
+// const query = `*[_type == "post" ][!(_id in path("drafts.**"))]`
+   const query = `*[_type == "post"] [!(_id in path("drafts.**"))]{
+  title,
+  "mainImage": mainImage.asset->url,
+  body,
+  author,
+  slug
+}`
+
   //build paramates object
   const params = {}
   //fetch the data
@@ -60,29 +44,6 @@ module.exports = async () => {
   let posts = []
   //call the get posts fuction
   if (posts.length === 0) posts =  await getPosts();
-
-  //for markdown
-  //posts[0]._body = toMarkdown(posts[0].body, {serializers})
-  
-  //for html
-  posts[0]._body= blocksToHtml({
-    blocks: posts[0].body,
-    serializers: serializers
-  })
-
-  //build an  image URL 
-  //note : we know there is a way to do this cleaner but I have hacked it for now
-  let _imageurl = `https://cdn.sanity.io/images/${process.env.SANITYPROJECTID}/production/`;
-  let _image = posts[0].mainImage.asset._ref;
-  _image = _image.replace("image-","")
-  _image = _image.replace("-png",".png")
-  posts[0]._mainImage = _imageurl+_image
-  //debug
-  //console.log("posts")
-  //console.log(posts)
-  //console.dir(posts[0].body)
-  //console.log(posts[0])
-  //console.log(posts[0]._mainImage)
   return {
         postsArray: posts
   }

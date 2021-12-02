@@ -10,7 +10,7 @@ pageType: contentdetail
 menuName: content
 ---
 <!-- Page Header-->
-<header class="masthead" style="background-image: url('{{contentarray._mainImage}}')">
+<header class="masthead" style="background-image: url('{{contentarray.mainImage }}')">
     <div class="container position-relative px-4 px-lg-5">
         <div class="row gx-4 gx-lg-5 justify-content-center">
             <div class="col-md-10 col-lg-8 col-xl-7">
@@ -27,8 +27,8 @@ menuName: content
 <div class="container px-4 px-lg-5">
     <div class="row gx-4 gx-lg-5 justify-content-center">
         <div class="col-md-10 col-lg-8 col-xl-7">
-        {{contentarray._body | safe }}
-        </div>
+        {{contentarray.body | sanityToHTML | safe}}
+        </div> 
     </div>
 </div>
 
