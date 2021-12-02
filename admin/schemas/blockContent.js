@@ -60,6 +60,11 @@ export default {
     {
       type: 'image',
       options: {hotspot: true},
+    },    
+    {
+      name: 'code',
+      title: 'Code',
+      type: 'code'
     },
   ],
 }

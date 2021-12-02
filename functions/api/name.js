@@ -1,57 +1,18 @@
-
-
-
-export async function onRequest(context) {
-  // Contents of context object
-  const {
-    request, // same as existing Worker API
-    params, // if filename includes [id] or [[path]]
-    waitUntil, // same as ctx.waitUntil in existing Worker API
-    next, // used for middleware or to fetch assets
-    data, // arbitrary space for passing data between middlewares
-    env,
-  } = context;
-
-
+const errorHandler = async ({ next }) => {
   try {
-  	console.dir(env)
-    console.log(env.test)
-   	const value = await env.CZBLOG.list()
+    return await next()
   } catch (err) {
-  	//console.dir(context)
-  	  //IMAGES: KVNamespace;
-
-  	console.dir(context)
-  	//console.log(params)
-
-    return new Response(err);
+    return new Response(`${err.message}\n${err.stack}`, { status: 500 })
   }
-
 }
 
-
-/*
-
-
-addEventListener("fetch", event => {
-  event.respondWith(handleRequest(event.request))
-})
-
-export async function handleRequest(request) {
-
-  const value = await CZBLOG.list()
-  return new Response(value.keys)
+const hello = async ({ next }) => {
+  const response = await next()
+  response.headers.set('X-Hello', 'Hello from functions Middleware!')
+  return response
 }
-  let res;
-  
-  try {
-    context.data.timestamp = Date.now()
-    res = await context.next();
-  } catch (err) {
-    res = new Response('Oops!', { status: 500 })
-  } finally {
-    let delta = Date.now() - context.data.timestamp
-    res.headers.set('x-response-timing', delta)
-    return res
-  }
-  */
+
+export const onRequest = [
+  errorHandler,
+  hello
+]
