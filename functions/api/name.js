@@ -26,7 +26,7 @@ export async function onRequest(context) {
       KV.put("Whan", "is the best",{})
       const value = await KV.list()
       console.log(value)
-      //console.log(context.env)
+      console.log(context.env)
       //let json = JSON.stringify(context)
       return new Response('boo');
   } catch (err) {
