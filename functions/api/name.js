@@ -22,7 +22,7 @@ export async function onRequest(context) {
       //console.log(value)
       return new Response(value.list_complete);
   } catch (err) {
-    console.log(err)
+      return new Response(err);
   }
 
 }
