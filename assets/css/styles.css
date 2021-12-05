@@ -602,6 +602,10 @@ progress {
   color: #6c757d;
 }
 
+.figure img {
+width: 100%
+}
+
 .container,
 .container-fluid,
 .container-xxl,
