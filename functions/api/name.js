@@ -17,7 +17,7 @@ export async function onRequest(context) {
 
       //const ALLOW_TEST = (context.env.ALLOW_TEST === "True");
       //console.log(ALLOW_TEST)
-      const KV = context.env.CFKVDB;
+      const KV = context.env.ALLOW_TEST;
       //console.log(KV)
       //const key = await KV.get("wah22")
       //console.log(key)
@@ -25,7 +25,7 @@ export async function onRequest(context) {
       //KV.delete("wah22")
       KV.put("Whan", "is the best",{})
       const value = await KV.list()
-      //console.log(value)
+      console.log(value)
       //console.log(context.env)
       //let json = JSON.stringify(context)
       return new Response('boo');
