@@ -30,8 +30,8 @@ export async function onRequest(context) {
       //let json = JSON.stringify(context)
       return new Response('boo');
   } catch (err) {
-      let json = JSON.stringify(context)
-      return new Response(json);
+      let json = JSON.stringify(err)
+      return new Response(err);
   }
 
 }
