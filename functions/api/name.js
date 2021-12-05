@@ -27,7 +27,7 @@ export async function onRequest(context) {
       const value = await KV.list()
       console.log(value)
       //console.log(context)
-      return new Response(value.list_complete);
+      return new Response('holla');
   } catch (err) {
       return new Response(context.env);
   }
