@@ -9,18 +9,18 @@ export async function onRequest(context) {
     data, // arbitrary space for passing data between middlewares
   } = context;
     try {
-      const ALLOW_TEST = (context.env.ALLOW_TEST === "True");
+      //const ALLOW_TEST = (context.env.ALLOW_TEST === "True");
       //console.log(ALLOW_TEST)
       const KV = context.env.CFKVDB;
       //console.log(KV)
-      const key = await KV.get("wah22")
+      //const key = await KV.get("wah22")
       //console.log(key)
       //console.log(context)
       //KV.delete("wah22")
-      KV.put("wah22", "gah",{})
+      //KV.put("wah22", "gah",{})
       const value = await KV.list()
       //console.log(value)
-      return new Response("Hello, world2!");
+      return new Response(value.list_complete);
   } catch (err) {
     console.log(err)
   }
