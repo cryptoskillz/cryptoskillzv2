@@ -602,8 +602,8 @@ progress {
   color: #6c757d;
 }
 
-.figure img {
-width: 100%
+figure img {
+  width: 100%
 }
 
 .container,
