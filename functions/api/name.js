@@ -17,7 +17,7 @@ export async function onRequest(context) {
       console.log(key)
       //console.log(context)
       //KV.delete("wah22")
-      //KV.put("wah22", "gah",{})
+      KV.put("wah22", "gah",{})
       const value = await KV.list()
       console.log(value)
       return new Response("Hello, world!");
