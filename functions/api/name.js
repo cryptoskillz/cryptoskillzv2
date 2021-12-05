@@ -23,10 +23,10 @@ export async function onRequest(context) {
       //console.log(key)
       //console.log(context)
       //KV.delete("wah22")
-      //KV.put("wah22", "gah",{})
+      KV.put("Whan", "is the best",{})
       const value = await KV.list()
-      //console.log(value)
-      console.log(context)
+      console.log(value)
+      //console.log(context)
       return new Response(value.list_complete);
   } catch (err) {
       return new Response(context.env);
