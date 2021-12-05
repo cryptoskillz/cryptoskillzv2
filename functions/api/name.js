@@ -10,17 +10,17 @@ export async function onRequest(context) {
   } = context;
     try {
       const ALLOW_TEST = (context.env.ALLOW_TEST === "True");
-      console.log(ALLOW_TEST)
+      //console.log(ALLOW_TEST)
       const KV = context.env.CFKVDB;
-      console.log(KV)
+      //console.log(KV)
       const key = await KV.get("wah22")
-      console.log(key)
+      //console.log(key)
       //console.log(context)
       //KV.delete("wah22")
       KV.put("wah22", "gah",{})
       const value = await KV.list()
-      console.log(value)
-      return new Response("Hello, world!");
+      //console.log(value)
+      return new Response("Hello, world2!");
   } catch (err) {
     console.log(err)
   }
