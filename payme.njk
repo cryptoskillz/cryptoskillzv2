@@ -16,13 +16,7 @@ store in KV
 
 
  <!-- Main Content-->
- <script type="text/javascript">
- 	//A90C158B-2C44-4221-A664-893304569B48
 
-fetch("https://api.nomics.com/v1/exchange-rates?key=A90C158B-2C44-4221-A664-893304569B48")
-  .then(response => response.json())
-  .then(data => console.log(data))
- </script>
 
 
 <div class="d-flex justify-content-center">
@@ -31,6 +25,50 @@ fetch("https://api.nomics.com/v1/exchange-rates?key=A90C158B-2C44-4221-A664-8933
 <div class="d-flex justify-content-center">
 	<img src="/assets/images/qrcode.png" />
 </div>
-<div class="d-flex justify-content-center">
-	Congratulations on deciding to pay in Bitcoin you are through the looking glass. <br> Now you see the invoice you received from us, take 5% off it and pay. 
+<div class="d-flex justify-content-center" id="paymentamount">
 </div>
+<div class="d-flex justify-content-center" id="">
+	Congratulations on deciding to pay in Bitcoin you are through the looking glass. 
+</div>
+ <script type="text/javascript">
+ 	//A90C158B-2C44-4221-A664-893304569B48
+
+ 	let exchangRate = (rate,amount) => {	
+ 		//console.log(amount);
+ 		//console.log(rate)
+ 		let invoiceAmount = amount * rate;
+ 		//console.log("BTC "+invoiceAmount)
+ 		let discount = invoiceAmount * 0.05;
+ 		//console.log(discount)
+ 		let invoiceAmountWithDiscount = invoiceAmount - discount;
+ 		//console.log(invoiceAmountWithDiscount)
+ 		 document.getElementById('paymentamount').innerHTML = `Invoice of £${amount} with 5% discount please pay ${invoiceAmountWithDiscount} BTC`
+
+ 	}
+
+ 	const queryString = window.location.search;
+	const urlParams = new URLSearchParams(queryString);
+	//get the preview key
+	//todo : add a preview key to the blog element
+	//previewkey = urlParams.get('key');
+	let amount = urlParams.get('amount');
+	if (amount != null)
+	{
+		//fetch the current exchange rate
+		/*
+		todo
+		fetch("https://api.nomics.com/v1/exchange-rates?key=A90C158B-2C44-4221-A664-893304569B48")
+  		.then(response => response.json())
+  		.then(data => exchangRate(data))
+  		*/
+  		exchangRate(0.0000283036,amount)
+	}
+	else
+	{
+		amount = 0
+		exchangRate(0.0000283036,amount)
+	}
+
+
+
+ </script>
