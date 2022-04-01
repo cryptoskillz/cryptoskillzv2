@@ -8,19 +8,21 @@ headerType: solid
 
 to do
 
-monitor block chain
 store in KV
-input amount ux
-payment success ux
 curreiences
+use env vars
 
 --> 
-
-
- <!-- Main Content-->
-
-
-<div id="paymentqrcode">
+<div class="d-flex justify-content-center d-none" id="paymentinput">
+	<form class="form-inline">
+		<div class="form-group mb-2">
+			<label for="exampleFormControlInput1">Enter invoice amount</label>
+			<input type="email" class="form-control" id="inputAmount" placeholder="£1,000,000">
+		</div>
+		<button type="" class="btn btn-primary mb-2" id="inputAmountButton">Go</button>
+	</form>
+</div>
+<div id="paymentqrcode" class="d-none">
 	<div class="d-flex justify-content-center">
 		<a href="bitcoin:bc1q63vhza4jc7096w4skyzf6jtk30ylnf2ssmhpfj">bc1q63vhza4jc7096w4skyzf6jtk30ylnf2ssmhpfj</a>
 	</div>
@@ -29,6 +31,7 @@ curreiences
 	</div>
 	<div class="d-flex justify-content-center" id="paymentamount">
 	</div>
+
 	<div class="d-flex justify-content-center" id="">
 		Congratulations on deciding to pay in Bitcoin you are through the looking glass. 
 	</div>
@@ -45,13 +48,48 @@ curreiences
 	if (amount == null)
 		amount = 0;
 
+	//move these to env vars maybe?
  	//set the bitcoin address
  	let btcAddress = "bc1q63vhza4jc7096w4skyzf6jtk30ylnf2ssmhpfj";
  	//note : we could update address here and generate the QR code would make changing it easier in the future.
-
  	let currentBalance = 0;
  	//note : we should get this dynamically
  	let currentExchange = 0.0000283036
+
+ 	//add a listener event as want to know when it is been clicked
+ 	document.getElementById('inputAmountButton').addEventListener('click', function() {
+ 		//get the amount
+ 		let inputAmountEl = document.getElementById('inputAmount').value;
+ 		//check the user is not an idiot
+ 		//note : we should check they added a number
+ 		//note : we could get the invoice id here as well for the webhook
+ 		if (inputAmountEl != "")
+ 		{
+ 			amount = inputAmountEl;
+ 			showQrCode()
+ 		}
+ 		else
+ 			alert('come on put in a value!')
+
+    }) 
+
+ 	//show the qr payment element
+    let showQrCode = () => {
+    	//get the invoice amount in btc
+    	let invoiceAmount = amount * currentExchange;
+    	//get the 5% discount amoount
+	 	let discount = invoiceAmount * 0.05;
+	 	//apply the discount
+	 	let invoiceAmountWithDiscount = invoiceAmount - discount;
+	 	//get the message
+	 	let message = `Invoice of £${amount} with 5% discount please pay ${invoiceAmountWithDiscount} BTC`
+	 	//set the mesage
+	 	document.getElementById('paymentamount').innerHTML = message;
+	 	//show the qr code
+	    document.getElementById('paymentqrcode').classList.remove('d-none');
+	    //hide the got payment
+	    document.getElementById('paymentinput').classList.add('d-none')
+    }
 
  	//check balance function, pretty crude but good enough for us today, right now.
  	let checkBalance = () => {
@@ -70,23 +108,18 @@ curreiences
 	  	//check if it was the first call and store the current balance
 	  	if (first == 0)
 	  	{
-	  		//console.log(json)
 	    	currentBalance = parseInt(json, 10);
 	    	console.log("current balance "+currentBalance)
 	    	//set the exchange
-	    	exchangRate(currentExchange,amount)
-	    	//set the timer
+	    	exchangRate()
+	    	//set the timer to check every 2 minutes
 	    	setInterval(checkBalance, 120000);
 	  	}
 	    else
 	    {
 	    	//store the new balance
 	    	newBalance = parseInt(json,10)
-	    	//debug
-	    	//newBalance = currentBalance*2;
-	    	//console.log("from timer: "+newBalance);
-	    	//console.log(currentBalance)
-	    	//console.log(newBalance)
+	    	//check if is if it is higer
 	    	if (currentBalance < newBalance)
 	    	{
 	    		//get the amount received
@@ -108,28 +141,21 @@ curreiences
  	}
 
  	//set the amount to pay
- 	let exchangRate = (rate,amount) => {	
- 		let message = "";
+ 	let exchangRate = () => {	
  		if (amount == 0)
  		{
- 			//note : make it show how much do you want to pay input
- 			message = "No invoice amount specified please take 5% off your invoice and pay that."
+ 			//show the input amount div
+ 			document.getElementById('paymentinput').classList.remove('d-none');
+ 			//hide the qr code div
+ 			document.getElementById('paymentqrcode').classList.add('d-none');
+
  		}
  		else
  		{
-	 		let invoiceAmount = amount * rate;
-	 		let discount = invoiceAmount * 0.05;
-	 		let invoiceAmountWithDiscount = invoiceAmount - discount;
-	 		message = `Invoice of £${amount} with 5% discount please pay ${invoiceAmountWithDiscount} BTC`
-
+ 			//we have an amount so show calcualte ansd show the qr code div 
+ 			showQrCode();
  		}
- 		//alert(message)
- 		document.getElementById('paymentamount').innerHTML = message;
  	}
  	//get the balance
 	fetchBalace(btcAddress)
-
-
-
-
  </script>
