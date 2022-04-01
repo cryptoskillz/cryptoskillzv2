@@ -12,6 +12,7 @@ monitor block chain
 store in KV
 input amount ux
 payment success ux
+curreiences
 
 --> 
 
@@ -19,17 +20,20 @@ payment success ux
  <!-- Main Content-->
 
 
-
-<div class="d-flex justify-content-center">
-	<a href="bitcoin:bc1q63vhza4jc7096w4skyzf6jtk30ylnf2ssmhpfj">bc1q63vhza4jc7096w4skyzf6jtk30ylnf2ssmhpfj</a>
+<div id="paymentqrcode">
+	<div class="d-flex justify-content-center">
+		<a href="bitcoin:bc1q63vhza4jc7096w4skyzf6jtk30ylnf2ssmhpfj">bc1q63vhza4jc7096w4skyzf6jtk30ylnf2ssmhpfj</a>
+	</div>
+	<div class="d-flex justify-content-center">
+		<img src="/assets/images/qrcode.png" />
+	</div>
+	<div class="d-flex justify-content-center" id="paymentamount">
+	</div>
+	<div class="d-flex justify-content-center" id="">
+		Congratulations on deciding to pay in Bitcoin you are through the looking glass. 
+	</div>
 </div>
-<div class="d-flex justify-content-center">
-	<img src="/assets/images/qrcode.png" />
-</div>
-<div class="d-flex justify-content-center" id="paymentamount">
-</div>
-<div class="d-flex justify-content-center" id="">
-	Congratulations on deciding to pay in Bitcoin you are through the looking glass. 
+<div class="d-flex justify-content-center d-none" id="gotpayment">
 </div>
  <script type="text/javascript">
  	//A90C158B-2C44-4221-A664-893304569B48
@@ -66,21 +70,35 @@ payment success ux
 	  	//check if it was the first call and store the current balance
 	  	if (first == 0)
 	  	{
+	  		console.log(json)
 	    	currentBalance = parseInt(json, 10);
 	    	//set the exchange
 	    	exchangRate(currentExchange,amount)
 	    	//set the timer
-	    	setInterval(checkBalance, 60000);
+	    	setInterval(checkBalance, 10000);
 	  	}
 	    else
 	    {
 	    	//store the new balance
 	    	newBalance = parseInt(json,10)
-	    	console.log("from timer: "+newBalance);
-	    	if (currentBalance != newBalance)
+	    	//debug
+	    	//newBalance = currentBalance*2;
+	    	//console.log("from timer: "+newBalance);
+	    	//console.log(currentBalance)
+	    	//console.log(newBalance)
+	    	if (currentBalance < newBalance)
 	    	{
-	    		//todo update the ux
-	    		console.log('we got a payment')
+	    		//get the amount received
+	    		let paymentReceived = newBalance-currentBalance;
+	    		//turn the sats into BTC
+	    		paymentReceived = paymentReceived / 100000000;
+	    		//set the messages
+	    		document.getElementById('gotpayment').innerHTML = `<br><br>We have a payment for the amount of ${paymentReceived} BTC, we assume it was you, if so thankyou<br><br>`
+	    		//hide the qr code
+	    		document.getElementById('paymentqrcode').classList.add('d-none');
+	    		//show the got payment
+	    		document.getElementById('gotpayment').classList.remove('d-none')
+
 	    	}
 
 
@@ -106,12 +124,7 @@ payment success ux
  		}
  		//alert(message)
  		document.getElementById('paymentamount').innerHTML = message;
-
-
  	}
-
-
-
  	//get the balance
 	fetchBalace(btcAddress)
 
