@@ -8,9 +8,10 @@ headerType: solid
 
 to do
 
-paramaters to pass in
 monitor block chain
 store in KV
+input amount ux
+payment success ux
 
 --> 
 
@@ -33,41 +34,87 @@ store in KV
  <script type="text/javascript">
  	//A90C158B-2C44-4221-A664-893304569B48
 
+ 	//get the paramaters
+ 	const queryString = window.location.search;
+	const urlParams = new URLSearchParams(queryString);
+	let amount = urlParams.get('amount');
+	if (amount == null)
+		amount = 0;
+
+ 	//set the bitcoin address
+ 	let btcAddress = "bc1q63vhza4jc7096w4skyzf6jtk30ylnf2ssmhpfj";
+ 	//note : we could update address here and generate the QR code would make changing it easier in the future.
+
+ 	let currentBalance = 0;
+ 	//note : we should get this dynamically
+ 	let currentExchange = 0.0000283036
+
+ 	//check balance function, pretty crude but good enough for us today, right now.
+ 	let checkBalance = () => {
+ 		console.log('checking balance')
+ 		fetchBalace(btcAddress,1)
+ 	}
+
+ 	//this function gets the current balance
+ 	let fetchBalace = (address,first = 0) => {
+ 		//get the current balance 
+	   fetch("https://blockchain.info/q/addressbalance/" + btcAddress)
+	  .then(function(response) {
+	    return response.json();
+	  })
+	  .then(function(json) {
+	  	//check if it was the first call and store the current balance
+	  	if (first == 0)
+	  	{
+	    	currentBalance = parseInt(json, 10);
+	    	//set the exchange
+	    	exchangRate(currentExchange,amount)
+	    	//set the timer
+	    	setInterval(checkBalance, 60000);
+	  	}
+	    else
+	    {
+	    	//store the new balance
+	    	newBalance = parseInt(json,10)
+	    	console.log("from timer: "+newBalance);
+	    	if (currentBalance != newBalance)
+	    	{
+	    		//todo update the ux
+	    		console.log('we got a payment')
+	    	}
+
+
+	    }
+	  });
+ 	}
+
+ 	//set the amount to pay
  	let exchangRate = (rate,amount) => {	
- 		//console.log(amount);
- 		//console.log(rate)
- 		let invoiceAmount = amount * rate;
- 		//console.log("BTC "+invoiceAmount)
- 		let discount = invoiceAmount * 0.05;
- 		//console.log(discount)
- 		let invoiceAmountWithDiscount = invoiceAmount - discount;
- 		//console.log(invoiceAmountWithDiscount)
- 		 document.getElementById('paymentamount').innerHTML = `Invoice of £${amount} with 5% discount please pay ${invoiceAmountWithDiscount} BTC`
+ 		let message = "";
+ 		if (amount == 0)
+ 		{
+ 			//note : make it show how much do you want to pay input
+ 			message = "No invoice amount specified please take 5% off your invoice and pay that."
+ 		}
+ 		else
+ 		{
+	 		let invoiceAmount = amount * rate;
+	 		let discount = invoiceAmount * 0.05;
+	 		let invoiceAmountWithDiscount = invoiceAmount - discount;
+	 		message = `Invoice of £${amount} with 5% discount please pay ${invoiceAmountWithDiscount} BTC`
+
+ 		}
+ 		//alert(message)
+ 		document.getElementById('paymentamount').innerHTML = message;
+
 
  	}
 
- 	const queryString = window.location.search;
-	const urlParams = new URLSearchParams(queryString);
-	//get the preview key
-	//todo : add a preview key to the blog element
-	//previewkey = urlParams.get('key');
-	let amount = urlParams.get('amount');
-	if (amount != null)
-	{
-		//fetch the current exchange rate
-		/*
-		todo
-		fetch("https://api.nomics.com/v1/exchange-rates?key=A90C158B-2C44-4221-A664-893304569B48")
-  		.then(response => response.json())
-  		.then(data => exchangRate(data))
-  		*/
-  		exchangRate(0.0000283036,amount)
-	}
-	else
-	{
-		amount = 0
-		exchangRate(0.0000283036,amount)
-	}
+
+
+ 	//get the balance
+	fetchBalace(btcAddress)
+
 
 
 
