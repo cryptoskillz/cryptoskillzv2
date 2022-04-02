@@ -9,15 +9,16 @@ headerType: solid
 to do
 
 store in KV
-curreiences
 use env vars
+update place holder of input box with default currency
+return key on input invoice amount
 
 --> 
 <div class="d-flex justify-content-center d-none" id="paymentinput">
 	<div class="form-inline">
 		<div class="form-group mb-2">
 			<label for="exampleFormControlInput1">Enter invoice amount</label>
-			<input type="number" class="form-control" id="inputAmount" placeholder="£1,000,000">
+			<input type="number" class="form-control" id="inputAmount" placeholder="1,000,000">
 		</div>
 		<button type="" class="btn btn-primary mb-2" id="inputAmountButton">Go</button>
 	</div>
@@ -53,9 +54,8 @@ use env vars
 	if (currencyType == null)
 		currencyType = "GBP";
 	//we could make this dynamic
-	if ((currencyType == "usd") || (currencyType != ""))
+	if (currencyType == "usd")
 		currencySymbol = "$"
-	console.log(currencyType)
 
 	//move these to env vars maybe?
  	//set the bitcoin address
