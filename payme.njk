@@ -14,13 +14,13 @@ use env vars
 
 --> 
 <div class="d-flex justify-content-center d-none" id="paymentinput">
-	<form class="form-inline">
+	<div class="form-inline">
 		<div class="form-group mb-2">
 			<label for="exampleFormControlInput1">Enter invoice amount</label>
-			<input type="email" class="form-control" id="inputAmount" placeholder="£1,000,000">
+			<input type="number" class="form-control" id="inputAmount" placeholder="£1,000,000">
 		</div>
 		<button type="" class="btn btn-primary mb-2" id="inputAmountButton">Go</button>
-	</form>
+	</div>
 </div>
 <div id="paymentqrcode" class="d-none">
 	<div class="d-flex justify-content-center">
@@ -47,14 +47,22 @@ use env vars
 	let amount = urlParams.get('amount');
 	if (amount == null)
 		amount = 0;
+	let currencySymbol = "£"
+	//get the currency type
+	let currencyType = urlParams.get('currencytype');
+	if (currencyType == null)
+		currencyType = "GBP";
+	//we could make this dynamic
+	if ((currencyType == "usd") || (currencyType != ""))
+		currencySymbol = "$"
+	console.log(currencyType)
 
 	//move these to env vars maybe?
  	//set the bitcoin address
  	let btcAddress = "bc1q63vhza4jc7096w4skyzf6jtk30ylnf2ssmhpfj";
  	//note : we could update address here and generate the QR code would make changing it easier in the future.
  	let currentBalance = 0;
- 	//note : we should get this dynamically
- 	let currentExchange = 0.0000283036
+
 
  	//add a listener event as want to know when it is been clicked
  	document.getElementById('inputAmountButton').addEventListener('click', function() {
@@ -75,27 +83,38 @@ use env vars
 
  	//show the qr payment element
     let showQrCode = () => {
-    	//get the invoice amount in btc
-    	let invoiceAmount = amount * currentExchange;
-    	//get the 5% discount amoount
-	 	let discount = invoiceAmount * 0.05;
-	 	//apply the discount
-	 	let invoiceAmountWithDiscount = invoiceAmount - discount;
-	 	//get the message
-	 	let message = `Invoice of £${amount} with 5% discount please pay ${invoiceAmountWithDiscount} BTC`
-	 	//set the mesage
-	 	document.getElementById('paymentamount').innerHTML = message;
-	 	//show the qr code
-	    document.getElementById('paymentqrcode').classList.remove('d-none');
-	    //hide the got payment
-	    document.getElementById('paymentinput').classList.add('d-none')
-    }
+    	
+	   	let invoiceAmount = 0;
+
+	   	//get the current price
+		fetch("https://blockchain.info/tobtc?currency="+currencyType+"&value=" + amount)
+		.then(function(response) {
+			return response.json();
+		})
+		.then(function(json) {
+			//console.log(json)
+			invoiceAmount = json
+			//get the 5% discount amoount
+			let discount = invoiceAmount * 0.05;
+			//apply the discount
+			let invoiceAmountWithDiscount = invoiceAmount - discount;
+			//get the message
+			let message = `Invoice of ${currencySymbol}${amount} with 5% discount please pay ${invoiceAmountWithDiscount} BTC`
+			//set the mesage
+			document.getElementById('paymentamount').innerHTML = message;
+			//show the qr code
+			document.getElementById('paymentqrcode').classList.remove('d-none');
+			//hide the got payment
+			document.getElementById('paymentinput').classList.add('d-none')
+		});
+	}
 
  	//check balance function, pretty crude but good enough for us today, right now.
  	let checkBalance = () => {
  		console.log('checking balance')
  		fetchBalace(btcAddress,1)
  	}
+
 
  	//this function gets the current balance
  	let fetchBalace = (address,first = 0) => {
@@ -156,6 +175,6 @@ use env vars
  			showQrCode();
  		}
  	}
- 	//get the balance
+
 	fetchBalace(btcAddress)
  </script>
