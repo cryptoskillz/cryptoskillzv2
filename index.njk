@@ -7,46 +7,99 @@ headerType: solid
 {% set indexJS %}
 	{% include 'index.js' %}
 {% endset %}
-<!-- Page Header-->
-        <header class="masthead" style="background-image: url('/assets/images/home-bg.jpg')">
-            <div class="container position-relative px-4 px-lg-5">
-                <div class="row gx-4 gx-lg-5 justify-content-center">
-                    <div class="col-md-10 col-lg-8 col-xl-7">
-                        <div class="site-heading">
-                            <h1>cryptoskillz</h1>
-                            <span class="subheading">A journey through Bitcoin technology</span>
+<!-- Masthead-->
+        <header class="masthead bg-primary text-white text-center">
+            <div class="container d-flex align-items-center flex-column">
+               
+                <h1 class="masthead-heading text-uppercase mb-0">crypotskillz</h1>
+                <!-- Icon Divider-->
+                <div class="divider-custom divider-light">
+                    <div class="divider-custom-line"></div>
+                    <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+                    <div class="divider-custom-line"></div>
+                </div>
+                <!-- Masthead Subheading-->
+                <p class="masthead-subheading font-weight-light mb-0"></p>
+            </div>
+        </header>
+        <!-- Portfolio Section-->
+        <section class="page-section portfolio" id="portfolio">
+            <div class="container">
+                <!-- Portfolio Section Heading-->
+                <h2 class="page-section-heading text-center text-uppercase text-secondary mb-0">Playground</h2>
+                <!-- Icon Divider-->
+                <div class="divider-custom">
+                    <div class="divider-custom-line"></div>
+                    <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+                    <div class="divider-custom-line"></div>
+                </div>
+                <!-- Portfolio Grid Items-->
+                <div class="row justify-content-center">
+                    <!-- Portfolio Item 1-->
+                    <div class="col-md-6 col-lg-4 mb-5">
+                        <div class="portfolio-item mx-auto" data-bs-toggle="modal" data-bs-target="#portfolioModal1">
+                            <div class="portfolio-item-caption d-flex align-items-center justify-content-center h-100 w-100">
+                                <div class="portfolio-item-caption-content text-center text-white"><i class="fas fa-plus fa-3x"></i></div>
+                            </div>
+                            <img class="img-fluid" src="assets/images/portfolio/payme.png" alt="..." />
                         </div>
                     </div>
                 </div>
             </div>
-        </header>
-        <!-- Main Content-->
+        </section>
+        <!-- About Section-->
+        <section class="page-section bg-primary text-white mb-0" id="about">
+            <div class="container">
+                <!-- About Section Heading-->
+                <h2 class="page-section-heading text-center text-uppercase text-white">About</h2>
+                <!-- Icon Divider-->
+                <div class="divider-custom divider-light">
+                    <div class="divider-custom-line"></div>
+                    <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+                    <div class="divider-custom-line"></div>
+                </div>
+                <!-- About Section Content-->
+                <div class="row">
+                    <div class="col-lg-4 ms-auto"><p class="lead">Hello, friend. Thank you for stopping by. This site is the playground for crypotskillz. It will host what we are currently working on or nothing (nothing at all) as we wipe it (a lot).</p></div>
+                    <div class="col-lg-4 me-auto"><p class="lead"> We work on projects for fun, seldom for pay. Can you hire us to work on your project probably not? </p></div>
+                </div>
+                
+            </div>
+        </section>
 
-        <div class="container px-4 px-lg-5">
-            <div class="row gx-4 gx-lg-5 justify-content-center">
-                <div class="col-md-10 col-lg-8 col-xl-7">
-	                {% for item in api.postsArray %}
-	                    <!-- Post preview-->
-	                    
-	                    <div class="post-preview">
-	                        <a href="/post/{{item.slug.current}}/">
-	                            <h2 class="post-title">{{item.title}}</h2>
-	                            <h3 class="post-subtitle">{{item.summary}}</h3>
-	                        </a>
-	                        <!--
-	                        <p class="post-meta">
-	                            Posted by
-	                            <a href="#!">Start Bootstrap</a>
-	                            on September 24, 2021
-	                        </p>
-	                        -->
-	                    </div>
-	                {% endfor %}
-                    <!-- Divider -->
-                    <hr class="my-4" />
-                    <!-- Pager-->
-                    <!--<div class="d-flex justify-content-end mb-4"><a class="btn btn-primary text-uppercase" href="#!">Older Posts →</a></div>-->
+                <!-- Portfolio Modals-->
+      <!-- Portfolio Modal 1-->
+        <div class="portfolio-modal modal fade" id="portfolioModal1" tabindex="-1" aria-labelledby="portfolioModal1" aria-hidden="true">
+            <div class="modal-dialog modal-xl">
+                <div class="modal-content">
+                    <div class="modal-header border-0"><button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button></div>
+                    <div class="modal-body text-center pb-5">
+                        <div class="container">
+                            <div class="row justify-content-center">
+                                <div class="col-lg-8">
+                                    <!-- Portfolio Modal - Title-->
+                                    <h2 class="portfolio-modal-title text-secondary text-uppercase mb-0">Payme</h2>
+                                    <!-- Icon Divider-->
+                                    <div class="divider-custom">
+                                        <div class="divider-custom-line"></div>
+                                        <div class="divider-custom-icon"><i class="fas fa-star"></i></div>
+                                        <div class="divider-custom-line"></div>
+                                    </div>
+                                    <!-- Portfolio Modal - Image-->
+                                    <img class="img-fluid rounded mb-5" src="assets/images/portfolio/payme.png" alt="..." />
+                                    <!-- Portfolio Modal - Text-->
+                                    <p class="mb-4">Pay me is our super miminal proof of concept payment gateway.  Flat HTML, no server, no node. </p>
+                                    <a class="btn btn-primary" href="/payme/">
+                                        View
+                                    </a>
+                                   
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
+        </div>  
+        
 <script type="text/javascript">{{indexJS  | jsmin | safe}}</script>

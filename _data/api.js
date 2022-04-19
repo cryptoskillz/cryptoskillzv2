@@ -16,6 +16,12 @@ const client = sanityClient({
   useCdn: false, // `false` if you want to ensure fresh data
 })
 
+getCustomers = async () => {
+  //note you could interface with a API here but I don't have many customers so I do it this way.
+  let results = `[{id:1,name:"customer 1"},{id:2,name:"customer 2"}]`
+  return(results);
+}
+
 
 
 //async function to get the posts
@@ -42,10 +48,15 @@ getPosts = async () => {
 module.exports = async () => {
   //set a posts variale
   let posts = []
+  let customers = []
   //call the get posts fuction
   if (posts.length === 0) posts =  await getPosts();
+  //get the customers 
+  if (customers.length === 0) customers = await getCustomers()
+  console.log(customers)
   return {
-        postsArray: posts
+        postsArray: posts,
+        customersArray: customers
   }
 
 }

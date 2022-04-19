@@ -14,10 +14,15 @@ update place holder of input box with default currency
 return key on input invoice amount
 
 --> 
+<script>
+	//set a customers array 
+    var customers = {{api.customersArray | safe}}
+    //console.log(customers);
+</script>
 <div class="d-flex justify-content-center d-none" id="paymentinput">
 	<div class="form-inline">
 		<div class="form-group mb-2">
-			<label for="exampleFormControlInput1">Enter invoice amount</label>
+			<label for="exampleFormControlInput1" id="exampleFormControlInput1">Enter invoice amount</label>
 			<input type="number" class="form-control" id="inputAmount" placeholder="1,000,000">
 		</div>
 		<button type="" class="btn btn-primary mb-2" id="inputAmountButton">Go</button>
@@ -57,6 +62,24 @@ return key on input invoice amount
 	if (currencyType == "usd")
 		currencySymbol = "$"
 
+	//check the customer id
+	let customerId = urlParams.get('id');
+	if (customerId == null)
+		customerId = 0
+
+	if (customerId != 0)
+	{
+		for (var i = 0; i < customers.length; i++) 
+		{
+			if (customerId == customers[i].id)
+			{
+				console.log(customers[i])
+				document.getElementById('exampleFormControlInput1').innerHTML = `${customers[i].name} please enter invoice amount`
+				//alert('found it')
+			}
+		}
+
+	}
 	//move these to env vars maybe?
  	//set the bitcoin address
  	let btcAddress = "bc1q63vhza4jc7096w4skyzf6jtk30ylnf2ssmhpfj";
