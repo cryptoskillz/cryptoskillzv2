@@ -6,4 +6,5 @@ wipeOutOldBuild () {
 #delete the files in the site dir
 wipeOutOldBuild
 #run eleventy
-eleventy 
+npx @11ty/eleventy 
+ 
