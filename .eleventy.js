@@ -29,9 +29,6 @@ module.exports = function(eleventyConfig) {
   eleventyConfig.addPassthroughCopy({
     "robots.txt": "robots.txt"
   });
-   eleventyConfig.addPassthroughCopy({
-    ".well-known/": "well-known/"
-  });
 
   eleventyConfig.addFilter("jsmin", function (code) {
     let minified = Terser.minify(code);
